@@ -1,22 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\",
+  "WorkspaceRootPath": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\textures.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|solutionrelative:textures.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\abilities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\abilities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|solutionrelative:abilities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|d:\\andruha\\0 cat\\bopl.battle.v2.5.1\\mods\\octolib\\audio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|solutionrelative:audio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|solutionrelative:plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\resources\\abilitytexturetest.png||{58961B49-13E0-48C0-9258-13CBC4D40279}",
-      "RelativeMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|solutionrelative:resources\\abilitytexturetest.png||{58961B49-13E0-48C0-9258-13CBC4D40279}"
+      "AbsoluteMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\textures.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B53F1668-A5E9-4325-B51A-D9755681AE6C}|OctoLib.csproj|solutionrelative:textures.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,55 +26,57 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Textures.cs",
-              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Textures.cs",
-              "RelativeDocumentMoniker": "Textures.cs",
-              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Textures.cs",
-              "RelativeToolTip": "Textures.cs",
-              "ViewState": "AgIAAHkAAAAAAAAAAAAwwI0AAAA2AAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Audio.cs",
+              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Audio.cs",
+              "RelativeDocumentMoniker": "Audio.cs",
+              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Audio.cs",
+              "RelativeToolTip": "Audio.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwCMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-28T11:21:11.42Z",
+              "WhenOpened": "2026-05-29T12:35:00.66Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "AbilityTextureTest.png",
-              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Resources\\AbilityTextureTest.png",
-              "RelativeDocumentMoniker": "Resources\\AbilityTextureTest.png",
-              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Resources\\AbilityTextureTest.png",
-              "RelativeToolTip": "Resources\\AbilityTextureTest.png",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001533|",
-              "WhenOpened": "2026-05-28T11:19:45.054Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Abilities.cs",
-              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Abilities.cs",
-              "RelativeDocumentMoniker": "Abilities.cs",
-              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Abilities.cs",
-              "RelativeToolTip": "Abilities.cs",
-              "ViewState": "AgIAAMoAAAAAAAAAAAAuwDIBAAA1AAAAAAAAAA==",
+              "Title": "Textures.cs",
+              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Textures.cs",
+              "RelativeDocumentMoniker": "Textures.cs",
+              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Textures.cs",
+              "RelativeToolTip": "Textures.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwC4AAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-28T11:19:16.611Z"
+              "WhenOpened": "2026-05-28T11:21:11.42Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Plugin.cs",
-              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Plugin.cs",
+              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Plugin.cs",
               "RelativeDocumentMoniker": "Plugin.cs",
-              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLibKoda\\Plugin.cs",
+              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Plugin.cs",
               "RelativeToolTip": "Plugin.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAACsAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAqwCgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-25T16:46:12.248Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Abilities.cs",
+              "DocumentMoniker": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Abilities.cs",
+              "RelativeDocumentMoniker": "Abilities.cs",
+              "ToolTip": "D:\\Andruha\\0 Cat\\Bopl.Battle.v2.5.1\\Mods\\OctoLib\\Abilities.cs",
+              "RelativeToolTip": "Abilities.cs",
+              "ViewState": "AgIAAN4AAAAAAAAAAAAQwOUAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-28T11:19:16.611Z",
+              "EditorCaption": ""
             }
           ]
         }

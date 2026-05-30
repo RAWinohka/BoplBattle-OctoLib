@@ -12,17 +12,26 @@ namespace OctoLib
 {
     public static class Abilities
     {
-        private static readonly List<AbilityRegistration> _registrations = new List<AbilityRegistration>();
+        private static readonly List<BaseAbilityRegistration> _abilitywithbase = new List<BaseAbilityRegistration>();
         private static readonly List<AbilityCooldown> _cooldowns = new List<AbilityCooldown>();
         private static readonly List<AbilityOffensive> _offensive = new List<AbilityOffensive>();
         private static readonly List<AbilityBackground> _custombg = new List<AbilityBackground>();
+        private static readonly List<CustomAbilityRegistration> _ability = new List<CustomAbilityRegistration>();
         private static bool _hasInjected = false;
 
-        public class AbilityRegistration
+        public class BaseAbilityRegistration
         {
             public string BaseAbilityName { get; set; }
             public string NewAbilityName { get; set; }
             public string IconResourceName { get; set; }
+            public Assembly OwnerAssembly { get; set; }
+        }
+
+        public class CustomAbilityRegistration
+        {
+            public string NewAbilityName { get; set; }
+            public string IconResourceName { get; set; }
+            public GameObject GameObjectPrefab { get; set; }
             public Assembly OwnerAssembly { get; set; }
         }
 
@@ -59,7 +68,7 @@ namespace OctoLib
 
             var ownerAssembly = GetCallingAssembly();
 
-            _registrations.Add(new AbilityRegistration
+            _abilitywithbase.Add(new BaseAbilityRegistration
             {
                 BaseAbilityName = baseAbilityName,
                 NewAbilityName = newAbilityName,
@@ -68,6 +77,30 @@ namespace OctoLib
             });
 
             Plugin.Logger.LogInfo($"[OctoLib] Registered: {newAbilityName} (based on '{baseAbilityName}') from {ownerAssembly.GetName().Name}");
+        }
+
+        public static void NewAbility(
+            string newAbilityName,
+            string iconResourceName,
+            GameObject GameObjectPrefab)
+        {
+            if (string.IsNullOrEmpty(newAbilityName))
+            {
+                Plugin.Logger.LogWarning("[OctoLib] NewAbilityWithBase: base or new name is empty!");
+                return;
+            }
+
+            var ownerAssembly = GetCallingAssembly();
+
+            _ability.Add(new CustomAbilityRegistration
+            {
+                NewAbilityName = newAbilityName,
+                IconResourceName = iconResourceName,
+                GameObjectPrefab = GameObjectPrefab,
+                OwnerAssembly = ownerAssembly
+            });
+
+            Plugin.Logger.LogInfo($"[OctoLib] Registered: {newAbilityName} from {ownerAssembly.GetName().Name}");
         }
 
         public static void AbilitySetCooldown(string AbilityName, Fix Cooldown)
@@ -126,7 +159,7 @@ namespace OctoLib
             {
                 if (___abilityIconsFull.sprites.Count == 30)
                 {
-                    foreach (var reg in _registrations)
+                    foreach (var reg in _abilitywithbase)
                     {
                         GameObject GO = GameObject.Find(reg.NewAbilityName) ?? new GameObject(reg.NewAbilityName);
                         UnityEngine.Object.DontDestroyOnLoad(GO);
@@ -151,7 +184,7 @@ namespace OctoLib
             [HarmonyPrefix]
             public static void Prefix(AbilityGrid __instance)
             {
-                if (_hasInjected || _registrations.Count == 0) return;
+                if (_hasInjected || _abilitywithbase.Count == 0) return;
 
                 var traverse = Traverse.Create(__instance);
                 var abilityIcons = traverse.Field("abilityIcons").GetValue<NamedSpriteList>();
@@ -162,21 +195,31 @@ namespace OctoLib
                     return;
                 }
 
-                foreach (var sprite in abilityIcons.sprites)
+                if (Plugin.debugLogged.Value)
                 {
-                    Plugin.Logger.LogWarning($"[OctoLib] Ability Names: '{sprite.name}'");
+                    foreach (var sprite in abilityIcons.sprites)
+                    {
+                        Plugin.Logger.LogWarning($"[OctoLib] Ability Names: '{sprite.name}'");
+                    }
                 }
 
-                foreach (var reg in _registrations)
+                foreach (var reg in _abilitywithbase)
                 {
                     InjectAbility(abilityIcons, reg);
                 }
+
+                foreach (var reg in _ability)
+                {
+                    InjectCustomAbility(abilityIcons, reg);
+                }
+
+                //ChangeAbility(abilityIcons);
 
                 _hasInjected = true;
             }
         }
 
-        private static void InjectAbility(NamedSpriteList list, AbilityRegistration reg)
+        private static void InjectAbility(NamedSpriteList list, BaseAbilityRegistration reg)
         {
             Plugin.Logger.LogWarning($"[OctoLib] Start adding ability: '{reg.NewAbilityName}'");
             NamedSprite baseSprite = default;
@@ -269,6 +312,69 @@ namespace OctoLib
             Plugin.Logger.LogInfo($"[OctoLib] Injected: {reg.NewAbilityName}");
         }
 
+        private static void InjectCustomAbility(NamedSpriteList list, CustomAbilityRegistration reg)
+        {
+            Plugin.Logger.LogWarning($"[OctoLib] Start adding ability: '{reg.NewAbilityName}'");
+            NamedSprite CoilSprite = default;
+            bool IsOffensive = false;
+
+            foreach (var sprite in list.sprites)
+            {
+                if (sprite.name.Equals("Tesla coil"))
+                {
+                    CoilSprite = sprite;
+                    Plugin.Logger.LogWarning($"[OctoLib] Tesla coil sprite found!");
+                    break;
+                }
+            }
+
+            foreach (var Off in _offensive)
+            {
+                if (reg.GameObjectPrefab.name == Off.AbilityName)
+                {
+                    IsOffensive = Off.Offensive;
+                }
+            }
+
+            Texture2D AbilityTexture = Textures.LoadFromAssembly(reg.IconResourceName, reg.OwnerAssembly);
+            Texture2D AbilityBackground = null;
+            foreach (var bg in _custombg)
+            {
+                if (bg.AbilityName == reg.NewAbilityName)
+                {
+                    AbilityBackground = Textures.LoadFromAssembly(bg.Background, bg.OwnerAssembly);
+                }
+            }
+
+            Sprite newSprite;
+            if (AbilityTexture != null)
+            {
+                Texture2D AbilityTextureWithBackground = CreateAbilityTexture(AbilityTexture, AbilityBackground);
+                newSprite = Sprite.Create(
+                    AbilityTextureWithBackground,
+                    new Rect(0f, 0f, (float)AbilityTexture.width, (float)AbilityTexture.height),
+                    new Vector2(0.5f, 0.5f),
+                    CoilSprite.sprite.pixelsPerUnit,
+                    0u,
+                    SpriteMeshType.FullRect,
+                    Vector2.zero,
+                    false
+                );
+                newSprite.texture.filterMode = CoilSprite.sprite.texture.filterMode;
+                newSprite.texture.wrapMode = CoilSprite.sprite.texture.wrapMode;
+            }
+            else
+            {
+                Plugin.Logger.LogWarning($"[OctoLib] Icon not found: {reg.IconResourceName}. Using base icon.");
+                newSprite = CoilSprite.sprite;
+            }
+
+            NamedSprite newNamedSprite = new NamedSprite(reg.NewAbilityName, newSprite, reg.GameObjectPrefab, IsOffensive);
+            list.sprites.Add(newNamedSprite);
+
+            Plugin.Logger.LogInfo($"[OctoLib] Injected: {reg.NewAbilityName}");
+        }
+
         private static Assembly GetCallingAssembly()
         {
             var stack = new System.Diagnostics.StackTrace(1, false);
@@ -336,6 +442,14 @@ namespace OctoLib
 
             NewTexture.Apply();
             return NewTexture;
+        }
+
+        private static void ChangeAbility(NamedSpriteList list)
+        {
+            foreach (NamedSprite sprite in list.sprites)
+            { 
+
+            }
         }
     }
 }

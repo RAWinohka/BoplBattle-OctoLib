@@ -168,3 +168,7 @@ D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLibKoda\bin\Debug\Unity.Services.Co
 D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLibKoda\bin\Debug\Unity.Services.Core.Internal.dll
 D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLibKoda\bin\Debug\Unity.Services.Core.dll
 D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLibKoda\bin\Debug\Newtonsoft.Json.dll
+D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLib\bin\Debug\Unity.Services.Core.Networking.dll
+D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLib\bin\Debug\Unity.Services.Core.Internal.dll
+D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLib\bin\Debug\Unity.Services.Core.dll
+D:\Andruha\0 Cat\Bopl.Battle.v2.5.1\Mods\OctoLib\bin\Debug\Newtonsoft.Json.dll
