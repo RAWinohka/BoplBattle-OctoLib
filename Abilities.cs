@@ -15,7 +15,7 @@ namespace OctoLib
         private static readonly List<BaseAbilityRegistration> _abilitywithbase = new List<BaseAbilityRegistration>();
         private static readonly List<AbilityCooldown> _cooldowns = new List<AbilityCooldown>();
         private static readonly List<AbilityOffensive> _offensive = new List<AbilityOffensive>();
-        private static readonly List<AbilityBackground> _custombg = new List<AbilityBackground>();
+        private static readonly List<AbilityBackground> _backgrounds = new List<AbilityBackground>();
         private static readonly List<CustomAbilityRegistration> _ability = new List<CustomAbilityRegistration>();
         private static bool _hasInjected = false;
 
@@ -23,14 +23,14 @@ namespace OctoLib
         {
             public string BaseAbilityName { get; set; }
             public string NewAbilityName { get; set; }
-            public string IconResourceName { get; set; }
+            public Texture2D IconTexture { get; set; }
             public Assembly OwnerAssembly { get; set; }
         }
 
         public class CustomAbilityRegistration
         {
             public string NewAbilityName { get; set; }
-            public string IconResourceName { get; set; }
+            public Texture2D IconTexture { get; set; }
             public GameObject GameObjectPrefab { get; set; }
             public Assembly OwnerAssembly { get; set; }
         }
@@ -50,7 +50,7 @@ namespace OctoLib
         public class AbilityBackground
         {
             public string AbilityName { get; set; }
-            public string Background { get; set; }
+            public Texture2D Background { get; set; }
 
             public Assembly OwnerAssembly { get; set; }
         }
@@ -58,7 +58,7 @@ namespace OctoLib
         public static void NewAbilityWithBase(
             string baseAbilityName,
             string newAbilityName,
-            string iconResourceName)
+            Texture2D iconTexture)
         {
             if (string.IsNullOrEmpty(baseAbilityName) || string.IsNullOrEmpty(newAbilityName))
             {
@@ -72,7 +72,7 @@ namespace OctoLib
             {
                 BaseAbilityName = baseAbilityName,
                 NewAbilityName = newAbilityName,
-                IconResourceName = iconResourceName,
+                IconTexture = iconTexture,
                 OwnerAssembly = ownerAssembly
             });
 
@@ -81,7 +81,7 @@ namespace OctoLib
 
         public static void NewAbility(
             string newAbilityName,
-            string iconResourceName,
+            Texture2D iconTexture,
             GameObject GameObjectPrefab)
         {
             if (string.IsNullOrEmpty(newAbilityName))
@@ -95,7 +95,7 @@ namespace OctoLib
             _ability.Add(new CustomAbilityRegistration
             {
                 NewAbilityName = newAbilityName,
-                IconResourceName = iconResourceName,
+                IconTexture = iconTexture,
                 GameObjectPrefab = GameObjectPrefab,
                 OwnerAssembly = ownerAssembly
             });
@@ -133,7 +133,7 @@ namespace OctoLib
             });
         }
 
-        public static void AbilitySetBackground(string AbilityName, string Background)
+        public static void AbilitySetBackground(string AbilityName, Texture2D Background)
         {
             if (string.IsNullOrEmpty(AbilityName))
             {
@@ -143,7 +143,7 @@ namespace OctoLib
 
             var ownerAssembly = GetCallingAssembly();
 
-            _custombg.Add(new AbilityBackground
+            _backgrounds.Add(new AbilityBackground
             {
                 AbilityName = AbilityName,
                 Background = Background,
@@ -159,17 +159,30 @@ namespace OctoLib
             {
                 if (___abilityIconsFull.sprites.Count == 30)
                 {
-                    foreach (var reg in _abilitywithbase)
+                    foreach (var reg in _ability)
                     {
-                        GameObject GO = GameObject.Find(reg.NewAbilityName) ?? new GameObject(reg.NewAbilityName);
-                        UnityEngine.Object.DontDestroyOnLoad(GO);
+                        GameObject.DontDestroyOnLoad(reg.GameObjectPrefab);
 
-                        Texture2D texture = Textures.LoadFromAssembly(reg.IconResourceName, reg.OwnerAssembly);
-                        Sprite newSprite = texture != null
-                            ? Sprite.Create(texture, new Rect(341f, 0f, 339f, 283f), new Vector2(0.5f, 0.5f), 100f)
-                            : null;
+                        Texture2D AbilityTexture = reg.IconTexture;
+                        Texture2D AbilityBackground = GetBackgroundTexture(reg.NewAbilityName);
 
-                        NamedSprite NewNamedSprite = new NamedSprite(reg.NewAbilityName, newSprite, GO, true);
+                        Sprite newSprite;
+
+                        Texture2D AbilityTextureWithBackground = CreateAbilityTexture(AbilityTexture, AbilityBackground);
+                        newSprite = Sprite.Create(
+                            AbilityTextureWithBackground,
+                            new Rect(0f, 0f, (float)AbilityTexture.width, (float)AbilityTexture.height),
+                            new Vector2(0.5f, 0.5f),
+                            100u,
+                            0u,
+                            SpriteMeshType.FullRect,
+                            Vector2.zero,
+                            false
+                        );
+
+                        bool IsOffensive = GetIsOffensive(reg.NewAbilityName);
+
+                        NamedSprite NewNamedSprite = new NamedSprite(reg.NewAbilityName, newSprite, reg.GameObjectPrefab, IsOffensive);
                         ___abilityIconsFull.sprites.Add(NewNamedSprite);
                     }
                 }
@@ -213,8 +226,6 @@ namespace OctoLib
                     InjectCustomAbility(abilityIcons, reg);
                 }
 
-                //ChangeAbility(abilityIcons);
-
                 _hasInjected = true;
             }
         }
@@ -223,16 +234,15 @@ namespace OctoLib
         {
             Plugin.Logger.LogWarning($"[OctoLib] Start adding ability: '{reg.NewAbilityName}'");
             NamedSprite baseSprite = default;
-            NamedSprite CoilSprite = default;
+            NamedSprite RandomSprite = default;
             bool found = false;
-            bool IsOffensive = false;
 
             foreach (var sprite in list.sprites)
             {
-                if (sprite.name.Equals("Tesla coil"))
+                if (sprite.name.Equals("Random"))
                 {
-                    CoilSprite = sprite;
-                    Plugin.Logger.LogWarning($"[OctoLib] CoilSprite found!");
+                    RandomSprite = sprite;
+                    Plugin.Logger.LogWarning($"[OctoLib] Random Sprite found!");
                 }
 
 
@@ -240,7 +250,6 @@ namespace OctoLib
                 {
                     baseSprite = sprite;
                     found = true;
-                    //break;
                 }
             }
 
@@ -253,35 +262,18 @@ namespace OctoLib
             GameObject newGO = UnityEngine.Object.Instantiate(baseSprite.associatedGameObject);
             UnityEngine.Object.DontDestroyOnLoad(newGO);
             newGO.name = reg.NewAbilityName;
-            foreach (var coldwn in _cooldowns)
+            Fix Cooldown = GetCooldown(reg.NewAbilityName);
+            if (Cooldown != (Fix)(-1f))
             {
-                if (newGO.name == coldwn.AbilityName)
+                Ability component = newGO.GetComponent<Ability>();
+                if (component != null)
                 {
-                    Ability component = newGO.GetComponent<Ability>();
-                    if (component != null)
-                    {
-                        component.Cooldown = coldwn.Cooldown;
-                    }
+                    component.Cooldown = Cooldown;
                 }
             }
 
-            foreach (var Off in _offensive)
-            {
-                if (newGO.name == Off.AbilityName)
-                {
-                    IsOffensive = Off.Offensive;
-                }
-            }
-
-            Texture2D AbilityTexture = Textures.LoadFromAssembly(reg.IconResourceName, reg.OwnerAssembly);
-            Texture2D AbilityBackground = null;
-            foreach (var bg in _custombg)
-            {
-                if (bg.AbilityName == reg.NewAbilityName)
-                {
-                    AbilityBackground = Textures.LoadFromAssembly(bg.Background, bg.OwnerAssembly);
-                }
-            }
+            Texture2D AbilityTexture = reg.IconTexture;
+            Texture2D AbilityBackground = GetBackgroundTexture(reg.NewAbilityName);
 
             Sprite newSprite;
             if (AbilityTexture != null)
@@ -291,20 +283,22 @@ namespace OctoLib
                     AbilityTextureWithBackground,
                     new Rect(0f, 0f, (float)AbilityTexture.width, (float)AbilityTexture.height),
                     new Vector2(0.5f, 0.5f),
-                    CoilSprite.sprite.pixelsPerUnit,
+                    RandomSprite.sprite.pixelsPerUnit,
                     0u,
                     SpriteMeshType.FullRect,
                     Vector2.zero,
                     false
                 );
-                newSprite.texture.filterMode = baseSprite.sprite.texture.filterMode;
-                newSprite.texture.wrapMode = baseSprite.sprite.texture.wrapMode;
+                newSprite.texture.filterMode = RandomSprite.sprite.texture.filterMode;
+                newSprite.texture.wrapMode = RandomSprite.sprite.texture.wrapMode;
             }
             else
             {
-                Plugin.Logger.LogWarning($"[OctoLib] Icon not found: {reg.IconResourceName}. Using base icon.");
-                newSprite = CoilSprite.sprite;
+                //Plugin.Logger.LogWarning($"[OctoLib] Icon not found: {reg.IconResourceName}. Using base icon.");
+                newSprite = RandomSprite.sprite;
             }
+
+            bool IsOffensive = GetIsOffensive(reg.NewAbilityName);
 
             NamedSprite newNamedSprite = new NamedSprite(reg.NewAbilityName, newSprite, newGO, IsOffensive);
             list.sprites.Add(newNamedSprite);
@@ -315,36 +309,31 @@ namespace OctoLib
         private static void InjectCustomAbility(NamedSpriteList list, CustomAbilityRegistration reg)
         {
             Plugin.Logger.LogWarning($"[OctoLib] Start adding ability: '{reg.NewAbilityName}'");
-            NamedSprite CoilSprite = default;
-            bool IsOffensive = false;
+            NamedSprite RandomSprite = default;
+            GameObject.DontDestroyOnLoad(reg.GameObjectPrefab);
 
             foreach (var sprite in list.sprites)
             {
-                if (sprite.name.Equals("Tesla coil"))
+                if (sprite.name.Equals("Random"))
                 {
-                    CoilSprite = sprite;
-                    Plugin.Logger.LogWarning($"[OctoLib] Tesla coil sprite found!");
+                    RandomSprite = sprite;
+                    Plugin.Logger.LogWarning($"[OctoLib] Random sprite found!");
                     break;
                 }
             }
 
-            foreach (var Off in _offensive)
+            Fix Cooldown = GetCooldown(reg.NewAbilityName);
+            if (Cooldown != (Fix)(-1f))
             {
-                if (reg.GameObjectPrefab.name == Off.AbilityName)
+                Ability component = reg.GameObjectPrefab.GetComponent<Ability>();
+                if (component != null)
                 {
-                    IsOffensive = Off.Offensive;
+                    component.Cooldown = Cooldown;
                 }
             }
 
-            Texture2D AbilityTexture = Textures.LoadFromAssembly(reg.IconResourceName, reg.OwnerAssembly);
-            Texture2D AbilityBackground = null;
-            foreach (var bg in _custombg)
-            {
-                if (bg.AbilityName == reg.NewAbilityName)
-                {
-                    AbilityBackground = Textures.LoadFromAssembly(bg.Background, bg.OwnerAssembly);
-                }
-            }
+            Texture2D AbilityTexture = reg.IconTexture;
+            Texture2D AbilityBackground = GetBackgroundTexture(reg.NewAbilityName);
 
             Sprite newSprite;
             if (AbilityTexture != null)
@@ -354,20 +343,22 @@ namespace OctoLib
                     AbilityTextureWithBackground,
                     new Rect(0f, 0f, (float)AbilityTexture.width, (float)AbilityTexture.height),
                     new Vector2(0.5f, 0.5f),
-                    CoilSprite.sprite.pixelsPerUnit,
+                    RandomSprite.sprite.pixelsPerUnit,
                     0u,
                     SpriteMeshType.FullRect,
                     Vector2.zero,
                     false
                 );
-                newSprite.texture.filterMode = CoilSprite.sprite.texture.filterMode;
-                newSprite.texture.wrapMode = CoilSprite.sprite.texture.wrapMode;
+                newSprite.texture.filterMode = RandomSprite.sprite.texture.filterMode;
+                newSprite.texture.wrapMode = RandomSprite.sprite.texture.wrapMode;
             }
             else
             {
-                Plugin.Logger.LogWarning($"[OctoLib] Icon not found: {reg.IconResourceName}. Using base icon.");
-                newSprite = CoilSprite.sprite;
+                //Plugin.Logger.LogWarning($"[OctoLib] Icon not found: {reg.IconResourceName}. Using base icon.");
+                newSprite = RandomSprite.sprite;
             }
+
+            bool IsOffensive = GetIsOffensive(reg.NewAbilityName);
 
             NamedSprite newNamedSprite = new NamedSprite(reg.NewAbilityName, newSprite, reg.GameObjectPrefab, IsOffensive);
             list.sprites.Add(newNamedSprite);
@@ -385,6 +376,30 @@ namespace OctoLib
                     return asm;
             }
             return Assembly.GetExecutingAssembly();
+        }
+
+        private static bool GetIsOffensive(string abilityName)
+        {
+            foreach (var off in _offensive)
+                if (off.AbilityName == abilityName)
+                    return off.Offensive;
+            return false;
+        }
+
+        private static Fix GetCooldown(string abilityName)
+        {          
+            foreach (var coldwn in _cooldowns)
+                if (abilityName == coldwn.AbilityName)
+                    return coldwn.Cooldown;
+            return (Fix)(-1);
+        }
+
+        private static Texture2D GetBackgroundTexture(string abilityName)
+        {
+            foreach (var bg in _backgrounds)
+                if (bg.AbilityName == abilityName)
+                    return bg.Background;
+            return null;
         }
 
         private static Texture2D CreateAbilityTexture(Texture2D AbilityTexture, Texture2D AbilityBGTexture = null)
@@ -442,14 +457,6 @@ namespace OctoLib
 
             NewTexture.Apply();
             return NewTexture;
-        }
-
-        private static void ChangeAbility(NamedSpriteList list)
-        {
-            foreach (NamedSprite sprite in list.sprites)
-            { 
-
-            }
         }
     }
 }

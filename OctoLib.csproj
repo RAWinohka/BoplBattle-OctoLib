@@ -61,6 +61,10 @@
     <Reference Include="Unity.Services.Core.Networking">
       <HintPath>..\..\Сама игра\BoplBattle_Data\Managed\Unity.Services.Core.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Сама игра\BoplBattle_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\Сама игра\BoplBattle_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -83,6 +87,10 @@
     <Reference Include="UnityEngine.InputModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Сама игра\BoplBattle_Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -111,14 +119,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abilities.cs" />
-    <Compile Include="Audio.cs" />
+    <Compile Include="Animations.cs" />
+    <Compile Include="Audios.cs" />
+    <Compile Include="Localization.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Textures.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AbilityBg.png" />
-    <EmbeddedResource Include="Resources\AbilityTextureTest.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

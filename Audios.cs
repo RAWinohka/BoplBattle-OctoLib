@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using static OctoLib.Abilities;
 
 namespace OctoLib
 {
@@ -49,13 +48,13 @@ namespace OctoLib
         }
 
         //I stole this from MoreSongs, sorry about that
-        public static string GetAudioPath(string name, string folder)
+        public static string GetFilePath(string name, string folder)
         {
             var path = Path.Combine("BepInEx", "plugins", folder);
-            Plugin.Logger.LogInfo($"AudioPath is {path}");
-            List<string> audioFiles = new List<String>(Directory.GetFiles(path));
+            Plugin.Logger.LogInfo($"FilePath is {path}");
+            List<string> Files = new List<String>(Directory.GetFiles(path));
 
-            foreach (var file in audioFiles)
+            foreach (var file in Files)
             {
                 if (file.EndsWith(name))
                 {
@@ -156,9 +155,9 @@ namespace OctoLib
 
         private static Sound SoundInject(NewSoundRegistration reg)
         {
-            string AudioPath = GetAudioPath(reg.NewSoundName, reg.NewSoundFolder);
+            string AudioPath = GetFilePath(reg.NewSoundName, reg.NewSoundFolder);
             AudioClip NewAudioClip = GetAudioClip(AudioPath, GetAudioType(AudioPath));
-            if (NewAudioClip == null) Plugin.Logger.LogError($"AudioClip in path {GetAudioPath(reg.NewSoundName, reg.NewSoundFolder)} is null");
+            if (NewAudioClip == null) Plugin.Logger.LogError($"AudioClip in path {GetFilePath(reg.NewSoundName, reg.NewSoundFolder)} is null");
 
             string Soundname = Path.GetFileNameWithoutExtension(reg.NewSoundName);
             Plugin.Logger.LogInfo($"new sound name: {Soundname}");

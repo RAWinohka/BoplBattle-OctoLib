@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace OctoLib
 {
@@ -126,6 +130,37 @@ namespace OctoLib
             {
                 stream?.Dispose();
             }
+        }
+
+        public static Texture2D GetTexture(string filePath)
+        {
+            Plugin.Logger.LogInfo($"{Audio.FilePathToFileUrl(filePath)}");
+            using (UnityWebRequest www = new UnityWebRequest(Audio.FilePathToFileUrl(filePath)))
+            {
+                var result = www.SendWebRequest();
+
+                while (!result.isDone)
+                {
+                    Thread.Sleep(100);
+                }
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Plugin.Logger.LogError($"[OctoLib] Failed to load image {filePath}: {www.error}");
+                    return null;
+                }
+
+                Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                return texture;
+            }
+        }
+
+        public static Texture2D LoadTextureFromFiles(string name, string folder)
+        {
+            var path = Audio.GetFilePath(name, folder);
+            var texture = GetTexture(path);
+
+            return texture;
         }
 
         public static Texture2D LoadFromAssembly(string name, Assembly assembly, bool usePointFilter = true)
